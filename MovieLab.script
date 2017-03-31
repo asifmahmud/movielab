@@ -1,0 +1,135 @@
+Script started on Fri 12 Dec 2014 04:12:03 AM PST
+crystalcove% make MovieLab
+gcc -Wall -ansi -c MovieLab.c -o MovieLab.o
+make: Circular MovieLab <- MovieLab dependency dropped.
+gcc -Wall -ansi -c Movie.c -o Movie.o
+Movie.c: In function ‘CreateMovie’:
+Movie.c:32: warning: control reaches end of non-void function
+gcc -Wall -ansi -c Image.c -o Image.o
+gcc -Wall -ansi -c DIPs.c -o DIPs.o
+DIPs.c:84:3: warning: "/*" within comment
+gcc -Wall -ansi -c Advanced.c -o Advanced.o
+Advanced.c:6: warning: conflicting types for built-in function ‘pow’
+Advanced.c: In function ‘Posterize’:
+Advanced.c:24: warning: suggest parentheses around ‘-’ inside ‘<<’
+Advanced.c:27: warning: suggest parentheses around ‘-’ inside ‘<<’
+Advanced.c:30: warning: suggest parentheses around ‘-’ inside ‘<<’
+gcc -Wall -ansi -c ImageList.c -o ImageList.o
+gcc   MovieLab.o Movie.o Image.o DIPs.o Advanced.o ImageList.o   -o MovieLab
+crystalcove% ./MovieLab -h
+
+Format on command line is:
+MovieLab [option]
+-i [file_name]    to provide the input file name
+-o [file_name]    to provide the	output file name
+-f [no_frames]    to determine how many frames desired in the input stream
+-s [WidthxHeight] to set resolution of the input stream (widthxheight)
+-j                to generate the movie with JuliaSet sequences
+-bw               to activate the conversion to black and white
+-vflip            to activate vertical flip
+-hmirror          to activate horizontal flip
+-edge             to activate edge filter
+-poster           to activate posterize filter
+-cut [Start-End]  to crop the frame from the video from frame Start to frame End
+-resize [factor]  to resize the video with the provided factor [1-100]
+-fast   [factor]  to fast forward the video with the provided factor [1+]
+-rvs              to reverse the frame order of the input stream
+-h                to show this usage information
+crystalcove% MovieLab -i anteater -o out -f 100 -s 352x288 -bw - vflip vflip[K[5Dvflip
+The movie file anteater.yuv has been read successfully
+Operation BlackNWhite is done!
+Operation VFlip is done!
+The movie file out.yuv has been written successfully! 
+100 frames are written to the file out.yuv in total 
+crystalcove% MovieLab -i anteater -o out -f 100 -s 352x288 -edge
+The movie file anteater.yuv has been read successfully
+Operation Edge is done!
+The movie file out.yuv has been written successfully! 
+100 frames are written to the file out.yuv in total 
+crystalcove% MovieLab -i anteater -o out -f 100 -s 352x288 -poster
+The movie file anteater.yuv has been read successfully
+Operation Posterize is done!
+The movie file out.yuv has been written successfully! 
+100 frames are written to the file out.yuv in total 
+crystalcove% valgrind --leak-check=full MovieLab -i anteater -o out1 -f 150 -s 352x288 -cut 1-70
+==4782== Memcheck, a memory error detector
+==4782== Copyright (C) 2002-2012, and GNU GPL'd, by Julian Seward et al.
+==4782== Using Valgrind-3.8.1 and LibVEX; rerun with -h for copyright info
+==4782== Command: MovieLab -i anteater -o out1 -f 150 -s 352x288 -cut 1-70
+==4782== 
+The movie file anteater.yuv has been read successfully
+Operation Frame Cropping is done!
+The movie file out1.yuv has been written successfully! 
+70 frames are written to the file out1.yuv in total 
+==4782== 
+==4782== HEAP SUMMARY:
+==4782==     in use at exit: 0 bytes in 0 blocks
+==4782==   total heap usage: 906 allocs, 906 frees, 45,714,642 bytes allocated
+==4782== 
+==4782== All heap blocks were freed -- no leaks are possible
+==4782== 
+==4782== For counts of detected and suppressed errors, rerun with: -v
+==4782== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 6 from 6)
+crystalcove% valgrind --leak-check=full MovieLab -i anteater -o out2 -f 150 -s 352x288 -cut 80-150
+==4879== Memcheck, a memory error detector
+==4879== Copyright (C) 2002-2012, and GNU GPL'd, by Julian Seward et al.
+==4879== Using Valgrind-3.8.1 and LibVEX; rerun with -h for copyright info
+==4879== Command: MovieLab -i anteater -o out2 -f 150 -s 352x288 -cut 80-150
+==4879== 
+The movie file anteater.yuv has been read successfully
+Operation Frame Cropping is done!
+The movie file out2.yuv has been written successfully! 
+71 frames are written to the file out2.yuv in total 
+==4879== 
+==4879== HEAP SUMMARY:
+==4879==     in use at exit: 0 bytes in 0 blocks
+==4879==   total heap usage: 906 allocs, 906 frees, 45,714,642 bytes allocated
+==4879== 
+==4879== All heap blocks were freed -- no leaks are possible
+==4879== 
+==4879== For counts of detected and suppressed errors, rerun with: -v
+==4879== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 6 from 6)
+crystalcove% valgrind --leak-check=full MovieLab -i anteater -o out -f 150 -s 352x288 -fast 3fast 3[K[6D-fast 3[6Dfast 3
+==5011== Memcheck, a memory error detector
+==5011== Copyright (C) 2002-2012, and GNU GPL'd, by Julian Seward et al.
+==5011== Using Valgrind-3.8.1 and LibVEX; rerun with -h for copyright info
+==5011== Command: MovieLab -i anteater -o out -f 150 -s 352x288 -fast 3
+==5011== 
+The movie file anteater.yuv has been read successfully
+Operation Fast Forward is done! Number of frames = 50
+The movie file out.yuv has been written successfully! 
+50 frames are written to the file out.yuv in total 
+==5011== 
+==5011== HEAP SUMMARY:
+==5011==     in use at exit: 0 bytes in 0 blocks
+==5011==   total heap usage: 906 allocs, 906 frees, 45,714,641 bytes allocated
+==5011== 
+==5011== All heap blocks were freed -- no leaks are possible
+==5011== 
+==5011== For counts of detected and suppressed errors, rerun with: -v
+==5011== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 6 from 6)
+crystalcove% valgrind --leak-check=full MovieLab -i anteater -o out -f 150 -s 352x288 -resize 75
+==5093== Memcheck, a memory error detector
+==5093== Copyright (C) 2002-2012, and GNU GPL'd, by Julian Seward et al.
+==5093== Using Valgrind-3.8.1 and LibVEX; rerun with -h for copyright info
+==5093== Command: MovieLab -i anteater -o out -f 150 -s 352x288 -resize 75
+==5093== 
+The movie file anteater.yuv has been read successfully
+Operation Resize is done! New Width/Height = 264x216
+The movie file out.yuv has been written successfully! 
+150 frames are written to the file out.yuv in total 
+==5093== 
+==5093== HEAP SUMMARY:
+==5093==     in use at exit: 0 bytes in 0 blocks
+==5093==   total heap usage: 1,506 allocs, 1,506 frees, 71,380,241 bytes allocated
+==5093== 
+==5093== All heap blocks were freed -- no leaks are possible
+==5093== 
+==5093== For counts of detected and suppressed errors, rerun with: -v
+==5093== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 6 from 6)
+crystalcove% make clean
+rm -f *.o out.yuv out1.yuv out2.yuv MovieLab
+crystalcove% exit
+exit
+
+Script done on Fri 12 Dec 2014 04:19:53 AM PST
